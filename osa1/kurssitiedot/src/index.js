@@ -2,73 +2,77 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const App = () => {
-  const course = 'Half Stack application development!'
-  const part1 = {
-      name: 'Fundamentals of React',
-      exercises: 10
-  }
-  const part2 = {
-      name: 'Using props to pass data',
-      exercises: 7
-  }
-  const part3 = {
-      name: 'State of a component',
-      exercises: 14
-  }
+    const course = 'Half Stack application development!'
+    const parts = [
+        {
+            name: 'Fundamentals of React',
+            exercises: 10
+        },
+        {
+            name: 'Using props to pass data',
+            exercises: 7
+        },
+        {
+            name: 'State of a component',
+            exercises: 14
+        }
+    ]
 
-  return (
-    <div>
-        <Header c={course} />
+    return (
         <div>
-            <Content
-                p1={part1.name} ex1={part1.exercises}
-                p2={part2.name} ex2={part2.exercises}
-                p3={part3.name} ex3={part3.exercises} />
+            <Header c={course} />
+            <Content parts={parts} />
+            <Total parts={parts} />
         </div>
-        <Total number={part1.exercises + part2.exercises + part3.exercises} />
-    </div>
-  )
+    )
 }
 
 const Header = (props) => {
     console.log('HEADER:')
     console.log(props)
     return (
-    <>
-        <h1>{props.c}</h1>
-    </>
+        <>
+            <h1>{props.c}</h1>
+        </>
     )
 }
 
 const Content = (props) => {
     console.log('CONTENT:')
     console.log(props)
-    return (
-    <div>
-        <Part p={props.p1} ex={props.ex1} />
-        <Part p={props.p2} ex={props.ex2} />
-        <Part p={props.p3} ex={props.ex3} />
-    </div>
-    )
-  }
 
-  const Part = (props) => {
+    const allparts = props.parts.map(part => <Part key={part.name} name={part.name} ex={part.exercises} />)
+
+    return (
+        <div>
+            {allparts}
+        </div>
+    )
+}
+
+const Part = (props) => {
     console.log('PART:')
     console.log(props)
-      return (
-          <>
-          <p>{props.p} {props.ex}</p>
-          </>
-      )
-  }
+    return (
+        <>
+            <p>{props.name} {props.ex}</p>
+        </>
+    )
+}
 
 const Total = (props) => {
     console.log('TOTAL:')
     console.log(props)
+
+    let total = 0
+    props.parts.forEach(part => {
+        total += part.exercises
+    });
+
     return (
-    <>
-        <p>Number of exercises {props.number}</p>
-    </>
+        <>
+            <p>Number of exercises {total}</p>
+        </>
     )
 }
 
