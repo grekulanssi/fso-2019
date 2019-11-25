@@ -44,6 +44,14 @@ const Header = () => {
 
 const Stats = ({ good, vGood, neutral, vNeutral, bad, vBad }) => {
 
+    if ((vGood + vNeutral + vBad) === 0) {
+        return (
+            <div>
+                <p>No feedback given</p>
+            </div>
+        )
+    }
+
     const all = vGood + vNeutral + vBad
     const avg = (vGood - vBad) / all
     const positive = vGood / all * 100
