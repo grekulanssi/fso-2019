@@ -11,3 +11,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+button {
+  background-color: aquamarine;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 2px;
+  text-align: center;
+}
+
+.main-container {
+  padding: 1em;
+}
+
+.anecdote {
+  min-height: 5em;
+}
+
+p {
+  font-style: italic;
+}

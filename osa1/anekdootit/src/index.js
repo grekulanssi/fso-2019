@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
+import './index.css';
+
 
 const App = (props) => {
     const [selected, setSelected] = useState(0)
-
+    console.log("anecdotes pituus: ", anecdotes.length)
     return (
-        <div>
-            {props.anecdotes[selected]}
-            <Button />
+        <div className="main-container">
+            <div className="anecdote">
+                <p>"{props.anecdotes[selected]}"</p>
+            </div>
+            <Button label='next anecdote' onClick={() => setSelected(Math.floor(Math.random() * (anecdotes.length - 1 + 1)) + 0)} />
         </div>
     )
 }
@@ -21,10 +25,10 @@ const anecdotes = [
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
-const Button = (props) => {
+const Button = ({ onClick, label }) => {
     return (
         <div>
-            <button>yeah</button>
+            <button onClick={onClick}>{label}</button>
         </div>
     )
 }
