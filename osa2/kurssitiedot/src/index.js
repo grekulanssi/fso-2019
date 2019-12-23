@@ -38,7 +38,7 @@ const App = () => {
 
 const Course = ({ course }) => {
     return (
-        <div>
+        <div className="course">
             <Header c={course.name} />
             <Content parts={course.parts} />
             <Total parts={course.parts} />
@@ -61,10 +61,10 @@ const Content = (props) => {
     console.log('CONTENT:')
     console.log(props)
 
-    const allparts = props.parts.map(part => <Part key={part.name} name={part.name} ex={part.exercises} />)
+    const allparts = props.parts.map(part => <Part key={part.id} name={part.name} ex={part.exercises} />)
 
     return (
-        <div>
+        <div className="content">
             {allparts}
         </div>
     )
@@ -81,14 +81,11 @@ const Part = (props) => {
 }
 
 
-const Total = (props) => {
+const Total = ({ parts} ) => {
     console.log('TOTAL:')
-    console.log(props)
+    console.log(parts)
 
-    let total = 0
-    props.parts.forEach(part => {
-        total += part.exercises
-    });
+    var total = parts.reduce((sum, part) => sum + part.exercises, 0)
 
     return (
         <>
