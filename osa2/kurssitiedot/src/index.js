@@ -41,13 +41,10 @@ const Course = ({ course }) => {
         <div>
             <Header c={course.name} />
             <Content parts={course.parts} />
+            <Total parts={course.parts} />
         </div>
     )
 }
-
-/*
-<Total parts={course.parts} />
-*/
 
 
 const Header = (props) => {
@@ -83,7 +80,7 @@ const Part = (props) => {
     )
 }
 
-/*
+
 const Total = (props) => {
     console.log('TOTAL:')
     console.log(props)
@@ -95,10 +92,10 @@ const Total = (props) => {
 
     return (
         <>
-            <p>Number of exercises {total}</p>
+            <p className="total">Total of {total} excercises</p>
         </>
     )
 }
-*/
+
 
 ReactDOM.render(<App />, document.getElementById('root'))
