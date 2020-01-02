@@ -1,13 +1,14 @@
 import React from 'react'
 import Country from './Country'
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, handler }) => {
     console.log('countries:', countries)
 
     const rows = () =>
         countries.map(country =>
             <div key={country.name}>
-                <span>{country.name}</span><Button /><br />
+                <span>{country.name}</span>
+                <Button countryName={country.name} handler={handler} /><br />
             </div>
         )
 
@@ -28,9 +29,15 @@ const Countries = ({ countries }) => {
     }
 }
 
-const Button = () => {
+const Button = ({ countryName, handler }) => {
+    console.log("this button is for country: ", countryName)
+    const handleButtonClick = () => {
+        console.log("klikkasit: ", countryName)
+        handler(countryName)
+    }
+
     return (
-    <button>show</button>
+        <button name={countryName} onClick={handleButtonClick}>show</button>
     )
 }
 

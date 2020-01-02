@@ -7,7 +7,7 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [newFiltertext, setNewFiltertext] = useState('')
   const filteredCountries = countries.filter(country => country.name.toLowerCase().includes(newFiltertext.toLowerCase()))
-
+  
   useEffect(() => {
     console.log('effect')
     axios
@@ -30,7 +30,7 @@ const App = () => {
         filtertext={newFiltertext}
         onChange={handleFiltertextChange}
       />
-      <Countries countries={filteredCountries} />
+      <Countries countries={filteredCountries} handler={setNewFiltertext} />
     </div>
   );
 }
