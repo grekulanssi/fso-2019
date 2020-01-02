@@ -12,6 +12,6 @@ code {
     monospace;
 }
 
-.flag {
+.flag, .weatherIcon {
   max-width: 100px;
 }
