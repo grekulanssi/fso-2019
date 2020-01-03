@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
+import ErrorNotification from './components/ErrorNotification'
 import phonebookService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [newFiltertext, setNewFiltertext] = useState('')  
+  const [newFiltertext, setNewFiltertext] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     console.log('effect')
@@ -44,13 +48,22 @@ const App = () => {
             console.log('returnedperson is ', returnedPerson)
             console.log('person to be replaced is ', personToBeReplaced)
             setPersons(persons.map(p => p.name !== returnedPerson.name ? p : returnedPerson))
+            setNotificationMessage(
+              `Changed number of ${returnedPerson.name} successfully`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
           })
           .catch(() => {
-            alert(
-                `'${personToBeReplaced.name}' was already deleted from server`
+            setErrorMessage(
+              `Information of '${personToBeReplaced.name}' was already deleted from server, please try again`
             )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
             setPersons(persons.filter(p => p.name !== personToBeReplaced.name))
-        })
+          })
       }
     }
     else {
@@ -59,6 +72,12 @@ const App = () => {
         .then(returnedPerson => {
           console.log(returnedPerson)
           setPersons(persons.concat(returnedPerson))
+          setNotificationMessage(
+            `Added ${personObject.name}`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
     }
     setNewName('')
@@ -75,13 +94,22 @@ const App = () => {
         .remove(person.id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== person.id))
+          setNotificationMessage(
+            `${person.name} removed successfully.`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
         .catch(() => {
-          alert(
-              `'${person.name}' was already deleted from server`
+          setErrorMessage(
+            `Information of '${person.name}' was already deleted from server`
           )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
           setPersons(persons.filter(p => p.name !== person.name))
-      })
+        })
     }
   }
 
@@ -104,6 +132,9 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
+      <Notification message={notificationMessage} />
+      <ErrorNotification message={errorMessage} />
+
       <Filter
         filtertext={newFiltertext}
         onChange={handleFiltertextChange}
@@ -121,7 +152,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons rows={rows()}/>
+      <Persons rows={rows()} />
 
     </div>
   )
