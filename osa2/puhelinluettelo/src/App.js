@@ -23,7 +23,7 @@ const App = () => {
 
   const rows = () =>
     persons.filter(person => person.name.toLowerCase().includes(newFiltertext.toLowerCase())).map(person =>
-      <li key={person.name}>{person.name} {person.number}</li>
+      <li key={person.name}>{person.name} {person.number} <button onClick={() => removePerson(person)}>remove</button></li>
     )
 
   const addPerson = (event) => {
@@ -48,6 +48,18 @@ const App = () => {
           setNewNumber('')
           /*Filter is also wiped to let the user certainly see the name she just added*/
           setNewFiltertext('')
+        })
+    }
+  }
+
+  const removePerson = (person) => {
+    console.log('remove button clicked', person)
+
+    if(window.confirm('Are you sure you want to remove ' + person.name + ' from phonebook?')) {
+      phonebookService
+        .remove(person.id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== person.id))
         })
     }
   }
