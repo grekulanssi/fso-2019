@@ -38,12 +38,15 @@ const App = () => {
     if (persons.some(e => e.name === personObject.name)) {
       window.alert(`${newName} is already added to phonebook`)
     } else {
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => response.data)
       setPersons(persons.concat(personObject))
+      setNewName('')
+      setNewNumber('')
+      /*Filter is also wiped to let the user certainly see the name she just added*/
+      setNewFiltertext('')
     }
-    setNewName('')
-    setNewNumber('')
-    /*Filter is also wiped to let the user certainly see the name she just added*/
-    setNewFiltertext('')
   }
 
   const handleNameChange = (event) => {
