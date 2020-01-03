@@ -8,7 +8,7 @@ const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [newFiltertext, setNewFiltertext] = useState('')
+  const [newFiltertext, setNewFiltertext] = useState('')  
 
   useEffect(() => {
     console.log('effect')
@@ -36,31 +36,52 @@ const App = () => {
     }
 
     if (persons.some(e => e.name === personObject.name)) {
-      window.alert(`${newName} is already added to phonebook`)
-    } else {
-
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with the new one?`)) {
+        var personToBeReplaced = persons.find(p => p.name === personObject.name)
+        phonebookService
+          .replace(personObject, personToBeReplaced.id)
+          .then(returnedPerson => {
+            console.log('returnedperson is ', returnedPerson)
+            console.log('person to be replaced is ', personToBeReplaced)
+            setPersons(persons.map(p => p.name !== returnedPerson.name ? p : returnedPerson))
+          })
+          .catch(() => {
+            alert(
+                `'${personToBeReplaced.name}' was already deleted from server`
+            )
+            setPersons(persons.filter(p => p.name !== personToBeReplaced.name))
+        })
+      }
+    }
+    else {
       phonebookService
         .create(personObject)
         .then(returnedPerson => {
           console.log(returnedPerson)
           setPersons(persons.concat(returnedPerson))
-          setNewName('')
-          setNewNumber('')
-          /*Filter is also wiped to let the user certainly see the name she just added*/
-          setNewFiltertext('')
         })
     }
+    setNewName('')
+    setNewNumber('')
+    /*Filter is also wiped to let the user certainly see the name she just added*/
+    setNewFiltertext('')
   }
 
   const removePerson = (person) => {
     console.log('remove button clicked', person)
 
-    if(window.confirm('Are you sure you want to remove ' + person.name + ' from phonebook?')) {
+    if (window.confirm('Are you sure you want to remove ' + person.name + ' from phonebook?')) {
       phonebookService
         .remove(person.id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== person.id))
         })
+        .catch(() => {
+          alert(
+              `'${person.name}' was already deleted from server`
+          )
+          setPersons(persons.filter(p => p.name !== person.name))
+      })
     }
   }
 
