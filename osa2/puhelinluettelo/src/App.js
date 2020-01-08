@@ -39,15 +39,15 @@ const App = () => {
       number: newNumber
     }
 
-    if (persons.some(e => e.name === personObject.name)) {
+    if (persons.some(e => e.name.toLowerCase() === personObject.name.toLowerCase())) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with the new one?`)) {
-        var personToBeReplaced = persons.find(p => p.name === personObject.name)
+        const personToBeReplaced = persons.find(p => p.name.toLowerCase() === personObject.name.toLowerCase())
         phonebookService
           .replace(personObject, personToBeReplaced.id)
           .then(returnedPerson => {
             console.log('returnedperson is ', returnedPerson)
             console.log('person to be replaced is ', personToBeReplaced)
-            setPersons(persons.map(p => p.name !== returnedPerson.name ? p : returnedPerson))
+            setPersons(persons.map(p => p.name.toLowerCase() !== returnedPerson.name.toLowerCase() ? p : returnedPerson))
             setNotificationMessage(
               `Changed number of ${returnedPerson.name} successfully`
             )
@@ -56,13 +56,20 @@ const App = () => {
             }, 5000)
           })
           .catch((error) => {
-            setErrorMessage(
-              `Information of '${personToBeReplaced.name}' was already deleted from server, please try again`
-            )
+            if (error.response.data.type === "validation") {
+              setErrorMessage(
+                `The number you tried to set for '${personToBeReplaced.name}' is invalid, please try again`
+              )
+            } else {
+              setErrorMessage(
+                `Information of '${personToBeReplaced.name}' was already deleted from server, please try again`
+              )
+              console.log('errori:', error)
+              setPersons(persons.filter(p => p.name !== personToBeReplaced.name))
+            }
             setTimeout(() => {
               setErrorMessage(null)
             }, 5000)
-            setPersons(persons.filter(p => p.name !== personToBeReplaced.name))
           })
       }
     }
@@ -77,6 +84,13 @@ const App = () => {
           )
           setTimeout(() => {
             setNotificationMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          console.log(error.response.data)
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => {
+            setErrorMessage(null)
           }, 5000)
         })
     }
