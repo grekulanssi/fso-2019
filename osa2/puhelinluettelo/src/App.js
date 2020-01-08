@@ -55,7 +55,7 @@ const App = () => {
               setNotificationMessage(null)
             }, 5000)
           })
-          .catch(() => {
+          .catch((error) => {
             setErrorMessage(
               `Information of '${personToBeReplaced.name}' was already deleted from server, please try again`
             )
