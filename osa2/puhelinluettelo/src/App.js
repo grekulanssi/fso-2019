@@ -23,7 +23,7 @@ const App = () => {
         setPersons(initialPersons)
       })
   }, [])
-  console.log('render', persons.length, 'notes')
+  console.log('render', persons.length, 'persons')
 
   const rows = () =>
     persons.filter(person => person.name.toLowerCase().includes(newFiltertext.toLowerCase())).map(person =>
