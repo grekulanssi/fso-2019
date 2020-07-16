@@ -52,7 +52,7 @@ const App = () => {
         setInfoNotificationMessage(null)
       }, 5000)
     } catch (e) {
-      setErrorNotificationMessage('Invalid credentials. Please try again.')
+      setErrorNotificationMessage('Invalid username or password. Please try again.')
       setTimeout(() => {
         setErrorNotificationMessage(null)
       }, 5000)
@@ -73,6 +73,9 @@ const App = () => {
   const handleNewBlog = async (event) => {
     event.preventDefault()
     console.log('adding new blog;', newBlogTitle, newBlogAuthor, newBlogUrl)
+    if (newBlogUrl) {
+
+    }
     const newBlog = {
       title: newBlogTitle,
       author: newBlogAuthor,
@@ -84,6 +87,10 @@ const App = () => {
       setNewBlogTitle('')
       setNewBlogAuthor('')
       setNewBlogUrl('')
+      setInfoNotificationMessage(`A new blog "${newBlogTitle}" by ${newBlogAuthor} added.`)
+      setTimeout(() => {
+        setInfoNotificationMessage(null)
+      }, 5000)
     } catch (e) {
       setErrorNotificationMessage('Adding blog failed. Please try again.')
       setTimeout(() => {
