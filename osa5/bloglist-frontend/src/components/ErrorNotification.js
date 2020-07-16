@@ -1,6 +1,6 @@
 import React from 'react'
 const ErrorNotification = ({ message }) => (
-  <div className="errornotification">
+  <div className='errorNotification'>
     <span>{message}</span>
   </div>
 )
