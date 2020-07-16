@@ -1,6 +1,6 @@
 import React from 'react'
 const InfoNotification = ({ message }) => (
-  <div className="infonotification">
+  <div className='infonotification'>
     <span>{message}</span>
   </div>
 )
