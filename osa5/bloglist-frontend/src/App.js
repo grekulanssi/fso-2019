@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
+import Togglable from './components/Togglable'
+import NewBlogForm from './components/NewBlogForm'
 import InfoNotification from './components/InfoNotification'
 import ErrorNotification from './components/ErrorNotification'
 import './index.css'
@@ -12,10 +14,8 @@ const App = () => {
   const [InfoNotificationMessage, setInfoNotificationMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [newBlogTitle, setNewBlogTitle] = useState('')
-  const [newBlogAuthor, setNewBlogAuthor] = useState('')
-  const [newBlogUrl, setNewBlogUrl] = useState('')
   const [user, setUser] = useState(null)
+  const blogFromRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -70,37 +70,6 @@ const App = () => {
     }, 5000)
   }
 
-  const fixUrl = (url) => {
-    if (url && !/^[a-zA-Z]+:\/\//i.test(url)) return 'http://' + url
-    return url
-  }
-
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
-    console.log('adding new blog;', newBlogTitle, newBlogAuthor, newBlogUrl)
-    const newBlog = {
-      title: newBlogTitle,
-      author: newBlogAuthor,
-      url: fixUrl(newBlogUrl)
-    }
-    try {
-      const returnedBlog = await blogService.create(newBlog)
-      setBlogs(blogs.concat(returnedBlog))
-      setNewBlogTitle('')
-      setNewBlogAuthor('')
-      setNewBlogUrl('')
-      setInfoNotificationMessage(`A new blog "${newBlogTitle}" by ${newBlogAuthor} added.`)
-      setTimeout(() => {
-        setInfoNotificationMessage(null)
-      }, 5000)
-    } catch (e) {
-      setErrorNotificationMessage('Adding blog failed. Please try again.')
-      setTimeout(() => {
-        setErrorNotificationMessage(null)
-      }, 5000)
-    }
-  }
-
   const loginForm = () => (
     <div>
       <h2>Please log in</h2>
@@ -145,44 +114,31 @@ const App = () => {
     </div>
   )
 
-  const newBlogForm = () => (
-    <div>
-      <h2>Add new blog</h2>
-      <form onSubmit={handleNewBlog}>
-        <ul>
-          <li><span>title:</span>
-            <input
-              type='text' value={newBlogTitle} name='Title' onChange={
-                ({ target }) => setNewBlogTitle(target.value)
-              }
-            />
-          </li>
-          <li><span>author:</span>
-            <input
-              type='text' value={newBlogAuthor} name='Author' onChange={
-                ({ target }) => setNewBlogAuthor(target.value)
-              }
-            />
-          </li>
-          <li><span>url:</span>
-            <input
-              type='text' value={newBlogUrl} name='Url' onChange={
-                ({ target }) => setNewBlogUrl(target.value)
-              }
-            />
-          </li>
-        </ul>
-        <button type='submit'>add</button>
-      </form>
-    </div>
-  )
+  const addBlog = async (blogObject) => {
+    try {
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(returnedBlog))
+      setInfoNotificationMessage(`A new blog "${returnedBlog.title}" by ${returnedBlog.author} added.`)
+      setTimeout(() => {
+        setInfoNotificationMessage(null)
+      }, 5000)
+      blogFromRef.current.toggleVisibility()
+    } catch (e) {
+      setErrorNotificationMessage('Adding blog failed. Please try again.')
+      setTimeout(() => {
+        setErrorNotificationMessage(null)
+      }, 5000)
+    }
+  }
 
   const loggedInContent = () => (
     <div>
       <p>Welcome, {user.name}!</p>
       {logoutButton()}
       {blogList()}
-      {newBlogForm()}
+      <Togglable buttonLabel='Add new blog' ref={blogFromRef}>
+        <NewBlogForm addNewBlog={addBlog} />
+      </Togglable>
     </div>
   )
 
