@@ -70,16 +70,18 @@ const App = () => {
     }, 5000)
   }
 
+  const fixUrl = (url) => {
+    if (url && !/^[a-zA-Z]+:\/\//i.test(url)) return 'http://' + url
+    return url
+  }
+
   const handleNewBlog = async (event) => {
     event.preventDefault()
     console.log('adding new blog;', newBlogTitle, newBlogAuthor, newBlogUrl)
-    if (newBlogUrl) {
-
-    }
     const newBlog = {
       title: newBlogTitle,
       author: newBlogAuthor,
-      url: newBlogUrl
+      url: fixUrl(newBlogUrl)
     }
     try {
       const returnedBlog = await blogService.create(newBlog)
