@@ -1,5 +1,20 @@
-.error {
+.errornotification {
     background-color: red;
+    width: 100%;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    line-height: 2;
+    overflow: hidden;
+  }
+
+.infonotification {
+    background-color: green;
     width: 100%;
     color: white;
     text-align: center;

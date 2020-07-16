@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import Notification from './components/Notification'
+import InfoNotification from './components/InfoNotification'
+import ErrorNotification from './components/ErrorNotification'
 import './index.css'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorNotificationMessage, setErrorNotificationMessage] = useState(null)
+  const [InfoNotificationMessage, setInfoNotificationMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -18,22 +20,45 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if(loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging in with', username, password)
+    console.log('logging in with', username, '&', password)
     try {
       const user = await loginService.login({
         username, password
       })
-    setUser(user)
-    setUsername('')
-    setPassword('')
+
+      window.localStorage.setItem(
+        'loggedBlogAppUser', JSON.stringify(user)
+      )
+      setUser(user)
+      setUsername('')
+      setPassword('')
     } catch (e) {
-      setErrorMessage('invalid credentials')
+      setErrorNotificationMessage('Invalid credentials. Please try again.')
       setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000);
+        setErrorNotificationMessage(null)
+      }, 5000)
     }
+  }
+
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    console.log('logging out user', username)
+    window.localStorage.removeItem('loggedBlogAppUser')
+    setUser(null)
+    setInfoNotificationMessage(`You have now successfully logged out. See you soon!`)
+    setTimeout(() => {
+      setInfoNotificationMessage(null)
+    }, 5000)
   }
 
   const loginForm = () => (
@@ -57,6 +82,14 @@ const App = () => {
     </div>
   )
 
+  const logoutButton = () => (
+    <div>
+      <form onSubmit={handleLogout}>
+        <button type ="submit">log out</button>
+      </form>
+    </div>
+  )
+
   const blogList = () => (
     <div>
         <h2>blogs</h2>
@@ -71,7 +104,8 @@ const App = () => {
   return (
     <div>
       <div>
-        <Notification message={errorMessage}/>
+        <ErrorNotification message={errorNotificationMessage}/>
+        <InfoNotification message={InfoNotificationMessage}/>
         <h1>Blog app</h1>
       </div>
       <div>
@@ -79,6 +113,7 @@ const App = () => {
           loginForm() :
           <div>
             <p>Welcome, {user.name}!</p>
+            {logoutButton()}
             {blogList()}
           </div>
           }

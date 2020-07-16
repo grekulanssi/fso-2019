@@ -1,7 +1,7 @@
 import React from 'react'
 const Blog = ({ blog }) => (
   <li>
-    {blog.title} by {blog.author}
+    <a href={blog.url} target="_blank" rel="noopener noreferrer">{blog.title}</a> by {blog.author}
   </li>
 )
 
