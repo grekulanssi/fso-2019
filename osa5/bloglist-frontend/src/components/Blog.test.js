@@ -1,19 +1,17 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { prettyDOM } from '@testing-library/dom'
 import Blog from './Blog'
 
+const testBlog = {
+  title: 'Testiblogin otsikko',
+  author: 'Testiblogin kirjoittaja',
+  url: 'http://www.testiblogi.url',
+  likes: 10,
+}
+
 test('blog entry is rendering content correctly', () => {
-  const testBlog = {
-    _id: { $oid: '5f05a6e4109c6f64a5597b89' },
-    title: 'Testiblogin otsikko',
-    author: 'Testiblogin kirjoittaja',
-    url: 'http://www.testiblogi.url',
-    likes: 10,
-    user: { $oid: '5f0594ed84057a52bbfffec0' },
-    __v: 0
-  }
 
   const component = render(
     <Blog blog={testBlog} />
@@ -31,18 +29,10 @@ test('blog entry is rendering content correctly', () => {
     'Testiblogin kirjoittaja'
   )
   expect(c).toContainHTML('href="http://www.testiblogi.url"')
+  expect(c).toHaveTextContent('show details')
 })
 
 test('blog entry is not rendering wrong content', () => {
-  const testBlog = {
-    _id: { $oid: '5f05a6e4109c6f64a5597b89' },
-    title: 'Testiblogin otsikko',
-    author: 'Testiblogin kirjoittaja',
-    url: 'http://www.testiblogi.url',
-    likes: 10,
-    user: { $oid: '5f0594ed84057a52bbfffec0' },
-    __v: 0
-  }
 
   const component = render(
     <Blog blog={testBlog} />
@@ -56,4 +46,43 @@ test('blog entry is not rendering wrong content', () => {
   expect(c).not.toHaveTextContent(
     'likes'
   )
+})
+
+test('clicking the "show details" button renders url and likes visible', async () => {
+
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <Blog blog={testBlog} toggleDetails={mockHandler} />
+  )
+
+  const button = component.getByText('show details')
+  fireEvent.click(button)
+
+  const c = component.container
+
+  expect(mockHandler.mock.calls).toHaveLength(1)
+  expect(c).toHaveTextContent('10 likes')
+  expect(c).toHaveTextContent('http://www.testiblogi.url')
+})
+
+test('clicking the "like" button twice sends two event handler calls', async () => {
+
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <Blog blog={testBlog} toggleDetails={mockHandler} />
+  )
+  const c = component.container
+
+  const detailsButton = component.getByText('show details')
+  fireEvent.click(detailsButton)
+  expect(mockHandler.mock.calls).toHaveLength(1)
+
+  const likeButton = c.querySelector('.likeButton')
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(3)
+  expect(c).toHaveTextContent('12 likes')
 })
