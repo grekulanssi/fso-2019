@@ -17,9 +17,7 @@ test('blog entry is rendering content correctly', () => {
     <Blog blog={testBlog} />
   )
 
-  //component.debug()
   const c = component.container
-  console.log(prettyDOM(c.querySelector('li')))
 
   expect(c).toBeVisible()
   expect(c).toHaveTextContent(
@@ -68,18 +66,19 @@ test('clicking the "like" button twice sends two event handler calls', async () 
   const mockHandler = jest.fn()
 
   const component = render(
-    <Blog blog={testBlog} toggleDetails={mockHandler} />
+    <Blog blog={testBlog} addLike={mockHandler} />
   )
   const c = component.container
 
   const detailsButton = component.getByText('show details')
   fireEvent.click(detailsButton)
-  expect(mockHandler.mock.calls).toHaveLength(1)
+
+  //component.debug()
+  console.log(prettyDOM(c.querySelector('li')))
 
   const likeButton = c.querySelector('.likeButton')
   fireEvent.click(likeButton)
   fireEvent.click(likeButton)
 
-  expect(mockHandler.mock.calls).toHaveLength(3)
-  expect(c).toHaveTextContent('12 likes')
+  expect(mockHandler.mock.calls).toHaveLength(2)
 })

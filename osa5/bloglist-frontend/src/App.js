@@ -70,6 +70,20 @@ const App = () => {
     }, 5000)
   }
 
+  const addLikeTo = async (id) => {
+    const blog = blogs.find(b => b.id === id)
+    const likedBlog = { ...blog, likes: blog.likes + 1 }
+    try {
+      const returnedBlog = await blogService.update(id, likedBlog)
+      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+    } catch (e) {
+      setErrorNotificationMessage('Adding like to blog failed.')
+      setTimeout(() => {
+        setErrorNotificationMessage(null)
+      }, 5000)
+    }
+  }
+
   const loginForm = () => (
     <div>
       <h2>Please log in</h2>
@@ -108,7 +122,7 @@ const App = () => {
       <h2>Blogs</h2>
       <ul>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} addLike={() => addLikeTo(blog.id)} />
         )}
       </ul>
     </div>
