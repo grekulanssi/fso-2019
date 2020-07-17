@@ -1,35 +1,35 @@
 .errorNotification {
-    background-color: red;
-    width: 100%;
-    color: white;
-    text-align: center;
-    font-weight: bold;
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    right: 0;
-    line-height: 2;
-    overflow: hidden;
-  }
+  background-color: red;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  line-height: 2;
+  overflow: hidden;
+}
 
 .infoNotification {
-    background-color: green;
-    width: 100%;
-    color: white;
-    text-align: center;
-    font-weight: bold;
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    right: 0;
-    line-height: 2;
-    overflow: hidden;
-  }
+  background-color: green;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  line-height: 2;
+  overflow: hidden;
+}
 
 h1 {
-    margin-top: 2.5rem;
+  margin-top: 2.5rem;
 }
 
 .blogEntry {
@@ -38,30 +38,39 @@ h1 {
 }
 
 .blogOpened {
-    padding-top: 10;
-    padding-left: 2;
-    border: 'solid' 1px;
-    margin-bottom: 1rem;
-  }
+  padding-top: 10;
+  padding-left: 2;
+  border: 'solid' 1px;
+  margin-bottom: 1rem;
+}
 
-  button {
-    margin-left: 0.5em;
-    border: none;
-    background-color: rgb(255, 212, 234);
-  }
-  .likeButton {
-    font-weight: bold;
-    background-color: transparent;
-    border: black 1px solid;
-    border-radius: 5px;
-  }
+button {
+  margin-left: 0.5em;
+  border: none;
+  background-color: #eeeeee;
+}
+.detailsButton {
+  font-style: italic;
+  font-size: 70%;
+}
+.likeButton {
+  font-weight: bold;
+  background-color: transparent;
+  border: black 1px solid;
+  border-radius: 5px;
+  font-size: 70%;
+}
+.removeButton {
+  background-color: rgb(255, 212, 234);
+  font-size: 70%;
+}
 
-  a:link {
-    color: darkblue;
-  }
-  a:visited {
-    color: rgb(81, 81, 146);
-  }
-  a:hover, a:active {
-    color: red;
-  }
+a:link {
+  color: darkblue;
+}
+a:visited {
+  color: rgb(81, 81, 146);
+}
+a:hover, a:active {
+  color: red;
+}

@@ -122,7 +122,7 @@ const App = () => {
       <h2>Blogs</h2>
       <ul>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} addLike={() => addLikeTo(blog.id)} />
+          <Blog key={blog.id} blog={blog} addLike={() => addLikeTo(blog.id)} removeThisBlog={() => removeBlog(blog.id)} />
         )}
       </ul>
     </div>
@@ -132,6 +132,7 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
+
       setInfoNotificationMessage(`A new blog "${returnedBlog.title}" by ${returnedBlog.author} added.`)
       setTimeout(() => {
         setInfoNotificationMessage(null)
@@ -142,6 +143,26 @@ const App = () => {
       setTimeout(() => {
         setErrorNotificationMessage(null)
       }, 5000)
+    }
+  }
+
+  const removeBlog = async (blogId) => {
+    if(!window.confirm('are you sure you want to delete this blog?')) return
+    try {
+      await blogService.remove(blogId)
+      setInfoNotificationMessage('The blog was successfully deleted.')
+
+      setBlogs(blogs.filter(b => b.id !== blogId))
+
+      setTimeout(() => {
+        setInfoNotificationMessage(null)
+      }, 5000)
+    } catch (e) {
+      setErrorNotificationMessage('Deleting blog failed. Maybe it was alerady deleted.')
+      setTimeout(() => {
+        setErrorNotificationMessage(null)
+      }, 5000)
+
     }
   }
 
