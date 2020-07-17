@@ -32,21 +32,21 @@ const NewBlogForm = ({ addNewBlog }) => {
         <ul>
           <li><span>title:</span>
             <input
-              type='text' value={newBlogTitle} name='Title' onChange={
+              id='title' type='text' value={newBlogTitle} name='Title' onChange={
                 ({ target }) => setNewBlogTitle(target.value)
               }
             />
           </li>
           <li><span>author:</span>
             <input
-              type='text' value={newBlogAuthor} name='Author' onChange={
+              id='author' type='text' value={newBlogAuthor} name='Author' onChange={
                 ({ target }) => setNewBlogAuthor(target.value)
               }
             />
           </li>
           <li><span>url:</span>
             <input
-              type='text' value={newBlogUrl} name='Url' onChange={
+              id='url' type='text' value={newBlogUrl} name='Url' onChange={
                 ({ target }) => setNewBlogUrl(target.value)
               }
             />
