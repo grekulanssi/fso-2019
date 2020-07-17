@@ -50,10 +50,8 @@ test('blog entry is not rendering wrong content', () => {
 
 test('clicking the "show details" button renders url and likes visible', async () => {
 
-  const mockHandler = jest.fn()
-
   const component = render(
-    <Blog blog={testBlog} toggleDetails={mockHandler} />
+    <Blog blog={testBlog} />
   )
 
   const button = component.getByText('show details')
@@ -61,9 +59,8 @@ test('clicking the "show details" button renders url and likes visible', async (
 
   const c = component.container
 
-  expect(mockHandler.mock.calls).toHaveLength(1)
-  expect(c).toHaveTextContent('10 likes')
   expect(c).toHaveTextContent('http://www.testiblogi.url')
+  expect(c).toHaveTextContent('10 likes')
 })
 
 test('clicking the "like" button twice sends two event handler calls', async () => {
