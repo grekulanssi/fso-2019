@@ -33,11 +33,31 @@ describe('Blog app', function() {
       cy.get('#password').type('wrongpass')
       cy.get('#login-button').click()
 
-      cy.contains('Invalid username or password. Please try again.')
-        .parent()
-        .should('have.css', 'background-color', 'rgb(255, 0, 0)')
+      cy.get('.errorNotification')
+        .should('contain', 'Invalid username or password. Please try again.')
+        .and('have.css', 'background-color', 'rgb(255, 0, 0)')
+
+      cy.get('html').should('not.contain', 'Welcome, Testi Käyttäjä!')
     })
   })
-  
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'testiusername', password: 'testisalasana' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('Add new blog').click()
+      cy.get('#title').type('Rapping album')
+      cy.get('#author').type('Cypress Hill')
+      cy.get('#url').type('cypress.hill')
+      cy.get('#submitNewBlogButton').click()
+
+      cy.get('.infoNotification').should('be.visible')
+      cy.get('li').should('contain', 'Rapping album by Cypress Hill')
+    })
+  })
+
+})
 })
 
