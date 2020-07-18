@@ -90,7 +90,7 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           <span>username</span>
-          <input
+          <input id='username'
             type='text' value={username} name='Username' onChange={
               ({ target }) => setUsername(target.value)
             }
@@ -98,7 +98,7 @@ const App = () => {
         </div>
         <div>
           <span>password</span>
-          <input
+          <input id='password'
             type='password' value={password} name='Password' onChange={
               ({ target }) => setPassword(target.value)
             }
