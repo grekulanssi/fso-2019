@@ -104,7 +104,7 @@ const App = () => {
             }
           />
         </div>
-        <button type='submit'>log in</button>
+        <button type='submit' id='login-button'>log in</button>
       </form>
     </div>
   )
@@ -112,7 +112,7 @@ const App = () => {
   const logoutButton = () => (
     <div>
       <form onSubmit={handleLogout}>
-        <button type='submit'>log out</button>
+        <button type='submit' id='logout-button'>log out</button>
       </form>
     </div>
   )
@@ -177,6 +177,13 @@ const App = () => {
     </div>
   )
 
+  const footer = () => (
+    <div className='footer'>
+      <p>Blog App by <a href="http://github.com/grekulanssi/" target="_blank" rel="noopener noreferrer">@grekulanssi</a>.</p>
+      <p>Made on <a href="https://fullstackopen.com/" target="_blank" rel="noopener noreferrer">Full Stack Open MOOC</a> by University of Helsinki, 2020.</p>
+    </div>
+  )
+
   return (
     <div>
       <div>
@@ -189,6 +196,7 @@ const App = () => {
           ? loginForm()
           : loggedInContent()}
       </div>
+      {footer()}
     </div>
   )
 }

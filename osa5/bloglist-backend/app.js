@@ -8,6 +8,9 @@ const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
 mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
+
+console.log('Let\'s go!')
 
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
@@ -32,6 +35,11 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
+
+if(process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
