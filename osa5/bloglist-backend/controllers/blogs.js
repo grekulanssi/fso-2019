@@ -29,13 +29,15 @@ blogsRouter.post('/', async (request, response) => {
   if(!decodedToken.id) return response.status(401).json({ error: 'authentication token verification failed' })
 
   const user = await User.findById(decodedToken.id)
+  let fixedLikes = 0
+  if(body.likes > 0) fixedLikes = body.likes
 
   const blog = new Blog(
     {
       title: body.title,
       author: body.author,
       url: body.url,
-      likes: !body.likes ? 0 : body.likes,
+      likes: fixedLikes,
       user: user._id
     }
   )
@@ -43,7 +45,8 @@ blogsRouter.post('/', async (request, response) => {
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  return response.status(201).json(savedBlog)
+  const populatedBlog = await Blog.findById(savedBlog.id).populate('user', { username: 1, name: 1, id: 1 })
+  return response.status(201).json(populatedBlog)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
@@ -86,12 +89,14 @@ blogsRouter.put('/:id', async (request, response) => {
     likes: body.likes,
     __v: body.__v
   }
+
   if(!blog.title || !blog.url) {
     response.status(400).end()
     return
   }
   if(!blog.likes) blog.likes = 0
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+    .populate('user', { username: 1, name: 1, id: 1 })
   response.status(201).json(updatedBlog)
 })
 

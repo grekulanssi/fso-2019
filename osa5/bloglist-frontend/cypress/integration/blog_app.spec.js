@@ -1,14 +1,12 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
-
     const user = {
       name: 'Testi Käyttäjä',
       username: 'testiusername',
       password: 'testisalasana'
     }
-    cy.request('POST', 'http://localhost:3003/api/users/', user) 
-
+    cy.request('POST', 'http://localhost:3003/api/users/', user)
     cy.visit('http://localhost:3000')
   })
 
@@ -56,8 +54,66 @@ describe('Blog app', function() {
       cy.get('.infoNotification').should('be.visible')
       cy.get('li').should('contain', 'Rapping album by Cypress Hill')
     })
+
+    describe('When logged in and one blog added', function() {
+      beforeEach(function() {
+        cy.addBlog({ title: 'Rapping album', author: 'Cypress Hill', url: 'cypress.hill' })
+      })
+
+      it('A blog can be liked', function() {
+        cy.contains('Rapping album by Cypress Hill')
+        cy.contains('show details')
+        cy.get('.detailsButton').click()
+
+        cy.contains('hide details')
+        cy.contains('cypress.hill')
+        cy.contains('0 likes')
+
+        cy.get('.likeButton').contains('like').click()
+        cy.contains('1 like')
+        cy.get('.likeButton').contains('like').click()
+        cy.contains('2 likes')
+      })
+
+      it('A blog can be deleted by the user', function() {
+        cy.contains('Rapping album by Cypress Hill')
+        cy.contains('show details')
+        cy.get('.detailsButton').click()
+
+        cy.contains('hide details')
+        cy.contains('cypress.hill')
+        cy.contains('0 likes')
+        cy.contains('Added by you')
+
+        cy.get('.removeButton').contains('remove').click()
+
+        cy.get('.infoNotification')
+          .should('contain', 'The blog was successfully deleted.')
+          .and('have.css', 'background-color', 'rgb(0, 128, 0)')
+      })
+
+      describe('When logged in and two blogs added', function() {
+        beforeEach(function() {
+          cy.addBlog({ title: 'Best blog', author: 'Cypress Best', url: 'cypress.best', likes: 10 })
+        })
+
+        it('Blogs are ordered by likes', function() {
+
+          // The first <li> element should be the 'Best blog' (10 likes)
+          cy.get('ul>li.blogEntry').eq(0).should('contain', 'Best blog by Cypress Best')
+          // The last <li> element should be the 'Rapping album' (0 likes)
+          cy.get('ul>li.blogEntry').eq(-1).should('contain', 'Rapping album by Cypress Hill')
+
+          cy.addBlog({ title: 'OK blog', author: 'Cypress OK', url: 'cypress.ok', likes: 5 })
+
+          // The first <li> element should be the 'Best blog' (10 likes)
+          cy.get('ul>li.blogEntry').eq(0).should('contain', 'Best blog by Cypress Best')
+          // The second <li> element should be the 'OK blog' (5 likes)
+          cy.get('ul>li.blogEntry').eq(1).should('contain', 'OK blog by Cypress OK')
+          // The last <li> element should be the 'Rapping album' (0 likes)
+          cy.get('ul>li.blogEntry').eq(-1).should('contain', 'Rapping album by Cypress Hill')
+        })
+      })
+    })
   })
-
 })
-})
-
