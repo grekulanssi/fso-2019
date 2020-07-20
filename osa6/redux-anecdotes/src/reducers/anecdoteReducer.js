@@ -20,8 +20,6 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const anecdoteReducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
   let newState = state
   switch (action.type) {
     case 'VOTE':
@@ -34,6 +32,7 @@ const anecdoteReducer = (state = initialState, action) => {
         anecdote.id === id ? votedAnecdote : anecdote)
       break
     case 'NEW_ANECDOTE':
+      if(action.data.content === '') break
       newState = [...state, action.data]
       break
     default: break
