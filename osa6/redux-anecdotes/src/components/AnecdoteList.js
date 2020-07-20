@@ -9,7 +9,6 @@ const AnecdoteList = () => {
 
     const vote = (id) => {
         dispatch(addVoteTo(id))
-
         const anecdoteToVote = anecdotes.find(a => a.id === id)
         console.log('anecdoteToVote:', anecdoteToVote)
         dispatch(notify(`You voted "${anecdoteToVote.content}"`))
@@ -18,10 +17,8 @@ const AnecdoteList = () => {
       }, 5000)
     }
 
-    return(
-    <div>
-    <h2>Anecdotes</h2>
-    {anecdotes.map(anecdote =>
+    const oneAnec = (anecdote) => {
+        return(
         <div key={anecdote.id}>
             <div>
                 {anecdote.content}
@@ -31,7 +28,13 @@ const AnecdoteList = () => {
                 <button onClick={() => vote(anecdote.id)}>vote</button>
             </div>
         </div>
-    )}
+        )
+    }
+
+    return(
+    <div>
+    <h2>Anecdotes</h2>
+    {anecdotes.map(anecdote => oneAnec(anecdote))}
     </div>
     )
 }
