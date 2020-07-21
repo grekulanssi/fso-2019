@@ -1,4 +1,5 @@
 const initialState = ''
+let timeoutHandle = null
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -14,7 +15,8 @@ export const setNotification = (notificationText, duration) => {
       type: 'NOTIFY',
       data: notificationText
     })
-    setTimeout(() => {
+    if (timeoutHandle) clearTimeout(timeoutHandle)
+    timeoutHandle = setTimeout(() => {
       dispatch({
         type: 'NOTIFY',
         data: ''
