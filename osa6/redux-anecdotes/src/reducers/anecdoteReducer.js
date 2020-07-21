@@ -4,13 +4,9 @@ const anecdoteReducer = (state = [], action) => {
   let newState = state
   switch (action.type) {
     case 'VOTE':
-      const id = action.data.id
-      const anecdoteToVote = state.find(a => a.id === id)
-      const votedAnecdote = {
-        ...anecdoteToVote, votes: anecdoteToVote.votes + 1
-      }
+      const votedAnecdote = action.data.votedAnecdote
       newState =  state.map(anecdote =>
-        anecdote.id === id ? votedAnecdote : anecdote)
+        anecdote.id === votedAnecdote.id ? votedAnecdote : anecdote)
       break
     case 'NEW_ANECDOTE':
       if(action.data.content === '') break
@@ -24,11 +20,15 @@ const anecdoteReducer = (state = [], action) => {
   return newState.sort((a, b) => b.votes - a.votes)
 }
 
-export const addVoteTo = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
+export const addVoteTo = id => {
+  return async dispatch => {
+    const votedAnecdote = await anecdoteService.addVote(id)
+    dispatch({
+      type: 'VOTE',
+      data: { votedAnecdote }
+    })
   }
+
 }
 
 export const createAnecdote = content => {
