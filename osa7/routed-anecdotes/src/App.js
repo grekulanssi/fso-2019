@@ -43,6 +43,12 @@ const CreateNew = (props) => {
   const author = useField('author')
   const info = useField('info')
 
+  const resetAll = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
@@ -70,7 +76,8 @@ const CreateNew = (props) => {
           url for more info
           <input {...info} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
+        <button type='reset' onClick={resetAll}>reset</button>
       </form>
     </div>
   )
