@@ -12,14 +12,11 @@ export const useField = (name) => {
   }
 
   return {
-    name,
-    value,
-    onChange,
-    reset
+    reset,
+    input: {
+        name,
+        value,
+        onChange
+    }
   }
 }
-
-/* moduulissa voi olla monta nimettyä eksportia
-export const useAnotherHook = () => {
-  // ...
-}*/
