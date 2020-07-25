@@ -28,8 +28,17 @@
   overflow: hidden;
 }
 
-h1 {
+.header {
   margin-top: 2.5rem;
+}
+
+.navi {
+  background-color: aliceblue;
+  padding: 1em 0;
+}
+.navi span {
+  margin: 0 1em;
+  float: right;
 }
 
 .blogEntry {
@@ -52,6 +61,10 @@ button {
   margin-left: 0.5em;
   font-style: italic;
   font-size: 70%;
+}
+#logoutButton {
+  margin: 0 1em;
+  float: right;
 }
 .likeButton {
   display: block;
