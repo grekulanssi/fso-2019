@@ -1,7 +1,13 @@
 {
   "name": "bloglist",
-  "version": "0.2.0",
-  "private": true,
+  "version": "0.3.0",
+  "description": "Fullstack harjoitusta",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grekulanssi/fso2019b.git"
+  },
+  "author": "Anssi Grekula",
+  "license": "MIT",
   "dependencies": {
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
