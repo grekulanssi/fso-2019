@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpIiwiaWQiOiI1ZjA3NjhkZGU3ODliYTljYTM2MTVjOGMiLCJpYXQiOjE1OTQzMjE4MTB9.dkVU-KMCYxhU82VjnI8fvhv8ZOqaRwS3JrJL5gfmttk
 
 {
-    "title": "autenttinen vajaa blogi",
+    "title": "API testi blogaus",
     "author": "fiksu kynäniekka",
     "url": "https://google.fi/"
 }

@@ -15,7 +15,7 @@ usersRouter.get('/', async (request, response) => {
 
 usersRouter.post('/', async (request, response) => {
   const body = request.body
-
+  
   if(!body.password) {
     response.status(400).json({ error: '`password` is required' }).end()
     return

@@ -36,6 +36,15 @@ const BlogInfo = () => {
     return(<div><span>Added by {blogUser.name}</span></div>)
   }
 
+  const comments = () => (
+    <div className='blogComments'>
+      <h3>Comments</h3>
+      <ul>
+        {blog.comments.map(c => <li key={c.id} >{c.content}</li>)}
+      </ul>
+    </div>
+  )
+
   return (
     <div>
       <div className='blogInfo'>
@@ -44,6 +53,7 @@ const BlogInfo = () => {
         <br />
         <button className='likeButton' onClick={() => dispatch(likeBlog(blog))}>{blog.likes} {blog.likes === 1 ? 'like' : 'likes'}</button>
         {addedBy()}
+        {comments()}
       </div>
     </div>
   )

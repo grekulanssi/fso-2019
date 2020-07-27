@@ -1,13 +1,14 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const Comment = require('../models/comment')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
     .populate('user', { username: 1, name: 1, id: 1 })
+    .populate('comments', { content: 1 })
   if(blogs) {
     return response.json(blogs)
   } else {
@@ -60,12 +61,10 @@ blogsRouter.delete('/:id', async (request, response) => {
   const blogId = request.params.id
   const blog = await Blog.findById(blogId)
   if(!blog) {
-    console.log('NO BLOGGY BLOGG')
     response.status(404).json({ error: 'blog you tried to delete was not found' })
     return
   }
   if(!blog.user) {
-    console.log('NO BLOG.USER')
     response.status(401).json({ error: 'blog does not have a user field' })
     return
   }
@@ -87,6 +86,7 @@ blogsRouter.put('/:id', async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
+    comments: body.comments,
     __v: body.__v
   }
 
@@ -97,7 +97,25 @@ blogsRouter.put('/:id', async (request, response) => {
   if(!blog.likes) blog.likes = 0
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     .populate('user', { username: 1, name: 1, id: 1 })
+    .populate('comments', { content: 1 })
   response.status(201).json(updatedBlog)
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const id = request.params.id
+  const newComment = new Comment(
+    {
+      content: request.body.content,
+      blog: id
+    }
+  )
+  const savedComment = await newComment.save()
+  const blogToBeCommented = await Blog.findById(id)
+  const newComments = blogToBeCommented.comments.concat(savedComment)
+  
+  const commentedBlog = await Blog.findByIdAndUpdate(id, { comments: newComments }, { new: true })
+  
+  return response.status(201).json(commentedBlog)
 })
 
 module.exports = blogsRouter
