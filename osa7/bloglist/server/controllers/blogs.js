@@ -78,7 +78,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   }
 })
 
-// This function cannot be used to update comments.
+// This function cannot be used to update comments, only likes.
 // To add comments, please use .post('/:id/comments' ...)
 blogsRouter.put('/:id', async (request, response) => { 
   const body = request.body
@@ -100,7 +100,7 @@ blogsRouter.put('/:id', async (request, response) => {
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     .populate('user', { username: 1, name: 1, id: 1 })
-    .populate('comments', { content: 1 })
+    .populate('comments', { content: 1 })  
 
   response.status(201).json(updatedBlog)
 })
@@ -119,6 +119,7 @@ blogsRouter.post('/:id/comments', async (request, response) => {
   
   const commentedBlog = await Blog
     .findByIdAndUpdate(id, { comments: newComments }, { new: true })
+    .populate('user', { username: 1, name: 1, id: 1 })
     .populate('comments', { content: 1 })
   
   return response.status(201).json(commentedBlog)

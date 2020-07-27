@@ -1,6 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
+import Typography from '@material-ui/core/Typography'
+
 const Notification = () => {
   const text = useSelector(state => state.notification.text)
   const isError = useSelector(state => state.notification.isError)
@@ -9,7 +11,7 @@ const Notification = () => {
   const cssClass = isError ? 'errorNotification' : 'infoNotification'
   return(
     <div className={cssClass}>
-      <span>{text}</span>
+      <span><Typography variant='body2'>{text}</Typography></span>
     </div>
   )
 }

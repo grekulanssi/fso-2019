@@ -10,7 +10,7 @@ const blogReducer = (state = [], action) => {
       break
     }
     case 'COMMENT': {
-      const commentedBlog = action.data      
+      const commentedBlog = action.data
       newState = state.map(blog =>
         blog.id === commentedBlog.id ? commentedBlog : blog)
       break
@@ -50,7 +50,7 @@ export const commentBlog = (blog, commentText) => {
       type: 'COMMENT',
       data: commentedBlog
     })
-  } 
+  }
 }
 
 export const createBlog = blog => {

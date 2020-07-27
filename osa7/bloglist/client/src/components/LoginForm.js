@@ -1,9 +1,15 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../reducers/loginReducer'
+import { useHistory } from 'react-router-dom'
+
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
+  let history = useHistory()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -12,21 +18,21 @@ const LoginForm = () => {
     event.target.Username.value = ''
     event.target.Password.value = ''
     await dispatch(loginUser(u, p))
+    history.push('/')
   }
 
   return(
     <div>
-      <h2>Please log in</h2>
+      <Typography variant='h2'>Please log in</Typography>
       <form onSubmit={handleLogin}>
         <div>
-          <span>username</span>
-          <input id='username' type='text' name='Username' />
+          <TextField label='username' id='username' type='text' name='Username' />
         </div>
         <div>
-          <span>password</span>
-          <input id='password' type='password' name='Password' />
+          <TextField label='password' id='password' type='password' name='Password' />
         </div>
-        <button type='submit' id='login-button'>log in</button>
+        <br />
+        <Button variant='contained' color='primary' type='submit' id='login-button'>log in</Button>
       </form>
     </div>
   )

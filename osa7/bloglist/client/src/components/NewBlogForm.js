@@ -3,6 +3,10 @@ import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
+import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+
 const NewBlogForm = () => {
   const dispatch = useDispatch()
 
@@ -31,20 +35,15 @@ const NewBlogForm = () => {
 
   return (
     <div>
-      <h2>Add new blog</h2>
+      <Typography variant='h2'>Add new blog</Typography>
       <form onSubmit={addBlog}>
-        <ul>
-          <li><span>title:</span>
-            <input id='title' type='text' name='Title'/>
-          </li>
-          <li><span>author:</span>
-            <input id='author' type='text' name='Author'/>
-          </li>
-          <li><span>url:</span>
-            <input id='url' type='text' name='Url'/>
-          </li>
-        </ul>
-        <button id='submitNewBlogButton' type='submit'>add</button>
+        <TextField label='Title' id='title' type='text' name='Title'/>
+        <br />
+        <TextField label='Author' id='author' type='text' name='Author'/>
+        <br />
+        <TextField label='url' id='url' type='text' name='Url'/>
+        <br /><br />
+        <Button variant='contained' id='submitNewBlogButton' type='submit'>add</Button>
       </form>
     </div>
   )

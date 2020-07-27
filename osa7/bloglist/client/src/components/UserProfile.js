@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeUsers } from '../reducers/userReducer'
 
+import Typography from '@material-ui/core/Typography'
+
 const UserProfile = () => {
   const dispatch = useDispatch()
 
@@ -19,18 +21,24 @@ const UserProfile = () => {
   if(!user) return null
 
   const mapBlogs = () => {
-    if(!user) return null
-    console.log('user blogs:', user.blogs)
-    if(!user.blogs) return null
-    return user.blogs.map(b =>
-      <li key={b.id}>{b.title}</li>)
+    if(!user || !user.blogs) return null
+    if(user.blogs.length === 0) {
+      return <Typography variant='body1'>The user seems not to have added any blogs yet.</Typography>
+    }
+    return (
+      <ul>
+        <Typography variant='body1'>
+          {user.blogs.map(b => <li key={b.id}>{b.title}</li>)}
+        </Typography>
+      </ul>
+    )
   }
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>{mapBlogs()}</ul>
+      <Typography variant='h2'>{user.name}</Typography>
+      <Typography variant='h3'>added blogs</Typography>
+      <div>{mapBlogs()}</div>
     </div>
   )
 }

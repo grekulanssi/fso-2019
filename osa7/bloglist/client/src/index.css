@@ -64,7 +64,9 @@ button {
 }
 #logoutButton {
   margin: 0 1em;
-  float: right;
+}
+.greeting {
+  margin: 0 1em;
 }
 .likeButton {
   display: block;
@@ -78,16 +80,6 @@ button {
   margin-left: 0.5em;
   background-color: rgb(255, 212, 234);
   font-size: 70%;
-}
-
-a:link {
-  color: darkblue;
-}
-a:visited {
-  color: rgb(81, 81, 146);
-}
-a:hover, a:active {
-  color: red;
 }
 
 .footer {

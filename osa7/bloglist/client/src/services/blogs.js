@@ -31,7 +31,7 @@ const addLike = async blog => {
 }
 
 const addComment = async (blog, comment) => {
-  const response = await axios.post(`${baseUrl}/${blog.id}/comments`, comment) 
+  const response = await axios.post(`${baseUrl}/${blog.id}/comments`, comment)
   return response.data
 }
 

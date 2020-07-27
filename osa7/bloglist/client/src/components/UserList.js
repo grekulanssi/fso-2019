@@ -3,6 +3,15 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { initializeUsers } from '../reducers/userReducer'
 
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+
 const UserList = () => {
 
   const dispatch = useDispatch()
@@ -15,26 +24,28 @@ const UserList = () => {
 
   const mapUsers = () => {
     return users.map(u =>
-      <tr key={u.id}>
-        <td><Link to={`/users/${u.id}`}>{u.name}</Link></td>
-        <td>{u.blogs.length}</td>
-      </tr>)
+      <TableRow key={u.id}>
+        <TableCell><Link to={`/users/${u.id}`}>{u.name}</Link></TableCell>
+        <TableCell>{u.blogs.length}</TableCell>
+      </TableRow>)
   }
 
   return (
     <div>
-      <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>blogs created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mapUsers()}
-        </tbody>
-      </table>
+      <Typography variant='h2'>Users</Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>blogs created</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {mapUsers()}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
