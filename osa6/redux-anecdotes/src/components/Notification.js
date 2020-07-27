@@ -11,9 +11,9 @@ const Notification = () => {
   return (
     <div>
       {notification === '' ? '' :
-      <div style={style}>
-        {notification}
-      </div>
+        <div style={style}>
+          {notification}
+        </div>
       }
     </div>
   )

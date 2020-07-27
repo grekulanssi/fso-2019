@@ -3,9 +3,9 @@ let timeoutHandle = null
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'NOTIFY':
-      return action.data
-    default: return state
+  case 'NOTIFY':
+    return action.data
+  default: return state
   }
 }
 

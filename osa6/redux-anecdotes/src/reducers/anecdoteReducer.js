@@ -3,19 +3,20 @@ import anecdoteService from '../services/anecdotes'
 const anecdoteReducer = (state = [], action) => {
   let newState = state
   switch (action.type) {
-    case 'VOTE':
-      const votedAnecdote = action.data.votedAnecdote
-      newState =  state.map(anecdote =>
-        anecdote.id === votedAnecdote.id ? votedAnecdote : anecdote)
-      break
-    case 'NEW_ANECDOTE':
-      if(action.data.content === '') break
-      newState = [...state, action.data]
-      break
-    case 'INIT_ANECDOTES':
-      newState = action.data
-      break
-    default: break
+  case 'VOTE': {
+    const votedAnecdote = action.data.votedAnecdote
+    newState =  state.map(anecdote =>
+      anecdote.id === votedAnecdote.id ? votedAnecdote : anecdote)
+    break
+  }
+  case 'NEW_ANECDOTE':
+    if(action.data.content === '') break
+    newState = [...state, action.data]
+    break
+  case 'INIT_ANECDOTES':
+    newState = action.data
+    break
+  default: break
   }
   return newState.sort((a, b) => b.votes - a.votes)
 }
