@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import CommentForm from './CommentForm'
 
 const BlogInfo = () => {
   const dispatch = useDispatch()
@@ -36,7 +37,8 @@ const BlogInfo = () => {
     return(<div><span>Added by {blogUser.name}</span></div>)
   }
 
-  const comments = () => (
+  const comments = () => {    
+    return (
     <div className='blogComments'>
       <h3>Comments</h3>
       <ul>
@@ -44,6 +46,7 @@ const BlogInfo = () => {
       </ul>
     </div>
   )
+  }
 
   return (
     <div>
@@ -54,6 +57,7 @@ const BlogInfo = () => {
         <button className='likeButton' onClick={() => dispatch(likeBlog(blog))}>{blog.likes} {blog.likes === 1 ? 'like' : 'likes'}</button>
         {addedBy()}
         {comments()}
+        <CommentForm blog={blog} />
       </div>
     </div>
   )

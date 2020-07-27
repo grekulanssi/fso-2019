@@ -9,6 +9,12 @@ const blogReducer = (state = [], action) => {
         blog.id === likedBlog.id ? likedBlog : blog)
       break
     }
+    case 'COMMENT': {
+      const commentedBlog = action.data
+      newState = state.map(blog =>
+        blog.id === commentedBlog.id ? commentedBlog : blog)
+      break
+    }
     case 'NEW_BLOG':
       newState = [...state, action.data]
       break
@@ -32,6 +38,16 @@ export const likeBlog = blog => {
       data: likedBlog
     })
   }
+}
+
+export const commentBlog = (blog, comment) => {
+  return async dispatch => {
+    const commentedBlog = await blogService.addComment(blog, comment)
+    dispatch({
+      type: 'COMMENT',
+      data: commentedBlog
+    })
+  } 
 }
 
 export const createBlog = blog => {
