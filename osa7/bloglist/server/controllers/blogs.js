@@ -78,15 +78,17 @@ blogsRouter.delete('/:id', async (request, response) => {
   }
 })
 
-blogsRouter.put('/:id', async (request, response) => {
+// This function cannot be used to update comments.
+// To add comments, please use .post('/:id/comments' ...)
+blogsRouter.put('/:id', async (request, response) => { 
   const body = request.body
+
   const blog = {
     id: body.id,
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
-    comments: body.comments,
     __v: body.__v
   }
 
@@ -95,9 +97,11 @@ blogsRouter.put('/:id', async (request, response) => {
     return
   }
   if(!blog.likes) blog.likes = 0
+
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     .populate('user', { username: 1, name: 1, id: 1 })
     .populate('comments', { content: 1 })
+
   response.status(201).json(updatedBlog)
 })
 
@@ -113,7 +117,9 @@ blogsRouter.post('/:id/comments', async (request, response) => {
   const blogToBeCommented = await Blog.findById(id)
   const newComments = blogToBeCommented.comments.concat(savedComment)
   
-  const commentedBlog = await Blog.findByIdAndUpdate(id, { comments: newComments }, { new: true })
+  const commentedBlog = await Blog
+    .findByIdAndUpdate(id, { comments: newComments }, { new: true })
+    .populate('comments', { content: 1 })
   
   return response.status(201).json(commentedBlog)
 })

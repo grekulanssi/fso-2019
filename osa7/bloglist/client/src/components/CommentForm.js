@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { commentBlog } from '../reducers/blogReducer'
 
-const CommentForm = ({ blog }) => {  
+const CommentForm = ({ blog }) => {
   const dispatch = useDispatch()
 
   const handleComment = async (event) => {
