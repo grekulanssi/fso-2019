@@ -1,4 +1,3 @@
-  
 import React from 'react'
 import { gql, useQuery } from '@apollo/client'
 
@@ -18,9 +17,6 @@ const Authors = (props) => {
   if (!props.show) {
     return null
   }
-  let authors = {}
-
-  if(!result.loading) authors = result.data.allAuthors
 
   const loading = () => (
     <tr key='loading'>
@@ -31,7 +27,7 @@ const Authors = (props) => {
   )
 
   const listing = () => (
-    authors.map(a =>
+    result.data.allAuthors.map(a =>
       <tr key={a.name}>
         <td>{a.name}</td>
         <td>{a.born ? a.born : '?'}</td>
