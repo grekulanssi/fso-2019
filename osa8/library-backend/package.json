@@ -1,8 +1,8 @@
 {
-  "name": "library",
+  "name": "library-backend",
   "version": "1.0.0",
   "description": "Full Stack Open part 8 excercises",
-  "main": "index.js",
+  "main": "library-backend.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ."

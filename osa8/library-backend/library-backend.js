@@ -155,10 +155,8 @@ const resolvers = {
     },
     editAuthor: (root, args) => {
       let author = authors.find(a => a.name === args.name)
-      console.log('auhtor:', author)
       if(!author) return null
       author.born = args.setBornTo
-      console.log('author nyt,', author)
       return author
     }
   }
