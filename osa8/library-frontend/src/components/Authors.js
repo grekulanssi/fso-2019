@@ -47,8 +47,18 @@ const Authors = ({ show, setError }) => {
       </tr>
     )
   )
-  
-  const submit = async (event) => {
+
+  const updateName = (selectedItem) => {
+    console.log('selectedItem', selectedItem)
+    
+    if(!selectedItem) {
+      setName('')
+      return
+    }
+    setName(selectedItem.value)    
+  }
+
+ const submit = async (event) => {
     event.preventDefault()
 
     if(!name || !born) {
@@ -69,6 +79,7 @@ const Authors = ({ show, setError }) => {
 
     setName('')
     setBorn('')
+    
   }
 
   return (
@@ -92,14 +103,18 @@ const Authors = ({ show, setError }) => {
       <form onSubmit={submit}>
         <div className='select'>
         <Select 
+          name='AuthorInput'
+          isClearable
           options={options}
-          placeholder='Select author*'
-          onChange={(selectedOption) => setName(selectedOption.value)}
+          value={name ? { value: name, label: name } : null}
+          placeholder='Select author...'
+          onChange={(selectedItem) => updateName(selectedItem)}
         />
         </div>
         <div>
           born*
           <input
+            name='Born'
             type='number'
             value={born}
             onChange={({ target }) => setBorn(parseInt(target.value))}
