@@ -25,8 +25,30 @@ const ALL_BOOKS = gql`
   }
 `
 
+const EDIT_AUTHOR = gql`mutation addAuthorBorn(
+  $name: String!,
+  $born: Int!
+  ) {
+    editAuthor(
+      name: $name,
+      setBornTo: $born
+    ) {
+      name,
+      born,
+      bookCount
+    }
+  }
+`
+
 const App = () => {
   const authorsResult = useQuery(ALL_AUTHORS)
+  
+  // Version 2: polling every 2 seconds:
+  /*const authorsResult = useQuery(ALL_AUTHORS, {
+    pollInterval: 2000
+  })*/
+  // If you want to use version 2, please see Authors.js
+
   const booksResult = useQuery(ALL_BOOKS)
 
   const [page, setPage] = useState('authors')
@@ -42,6 +64,8 @@ const App = () => {
       <Authors
         show={page === 'authors'}
         authors={authorsResult}
+        ALL_AUTHORS={ALL_AUTHORS}
+        EDIT_AUTHOR={EDIT_AUTHOR}
       />
 
       <Books
