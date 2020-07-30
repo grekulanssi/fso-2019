@@ -1,0 +1,9 @@
+.notification {
+    color: red
+}
+
+.select {
+    width: 50%;
+    max-width: 40em;
+    min-width: 20em;
+}

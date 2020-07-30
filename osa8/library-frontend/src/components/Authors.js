@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
-import { useMutation } from '@apollo/client'
+import Select from 'react-select'
+import { useMutation, useQuery } from '@apollo/client'
+import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 
-const Authors = ({ show, authors, ALL_AUTHORS, EDIT_AUTHOR }) => {
+const Authors = ({ show, setError }) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
+
+  const authors = useQuery(ALL_AUTHORS)
 
   const [ editAuthor ] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [ { query: ALL_AUTHORS } ]
@@ -15,6 +19,15 @@ const Authors = ({ show, authors, ALL_AUTHORS, EDIT_AUTHOR }) => {
 
   if (!show) {
     return null
+  }
+
+  let options = []
+  if(!authors.loading) {
+    options = authors.data.allAuthors.map(a => ({
+        value: a.name,
+        label: a.name
+      })
+    )
   }
 
   const loading = () => (
@@ -29,7 +42,7 @@ const Authors = ({ show, authors, ALL_AUTHORS, EDIT_AUTHOR }) => {
     authors.data.allAuthors.map(a =>
       <tr key={a.name}>
         <td>{a.name}</td>
-        <td>{a.born ? a.born : '?'}</td>
+        <td>{a.born ? (a.born < 0 ? (-a.born) + ' BC' : a.born) : '?'}</td>
         <td>{a.bookCount}</td>
       </tr>
     )
@@ -39,24 +52,20 @@ const Authors = ({ show, authors, ALL_AUTHORS, EDIT_AUTHOR }) => {
     event.preventDefault()
 
     if(!name || !born) {
-      alert('All fields are required!')
+      setError('All fields are required!')
       return
     }
     if(born > new Date().getFullYear()) {
-      alert(`Born year can't be in the future!`)
+      setError(`Born year can't be in the future!`)
       return
     }
     const allAuthors = authors.data.allAuthors.filter(a => a.name === name)    
     if(allAuthors.length === 0) {
-      alert(`There's no such author as ${name}!`)
+      setError(`There's no such author as ${name}!`)
       return
     }
 
-    await editAuthor({
-      variables: {
-        name, born
-      }
-    })
+    editAuthor({ variables: { name, born } })
 
     setName('')
     setBorn('')
@@ -81,12 +90,12 @@ const Authors = ({ show, authors, ALL_AUTHORS, EDIT_AUTHOR }) => {
       </table>
       <h3>Set birthyear</h3>
       <form onSubmit={submit}>
-        <div>
-          name*
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
+        <div className='select'>
+        <Select 
+          options={options}
+          placeholder='Select author*'
+          onChange={(selectedOption) => setName(selectedOption.value)}
+        />
         </div>
         <div>
           born*
