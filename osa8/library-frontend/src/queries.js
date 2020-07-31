@@ -43,6 +43,7 @@ export const BOOKS_BY_GENRE = gql`
         name
       }
       published
+      genres
     }
   }
 `

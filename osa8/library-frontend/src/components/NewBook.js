@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { ALL_AUTHORS, BOOKS_BY_GENRE, CREATE_BOOK } from '../queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES, BOOKS_BY_GENRE, CREATE_BOOK } from '../queries'
 
 const NewBook = ({ show, setError, setPage }) => {
   const [title, setTitle] = useState('')
@@ -10,7 +10,62 @@ const NewBook = ({ show, setError, setPage }) => {
   const [genres, setGenres] = useState([])
 
   const [ createBook ] = useMutation(CREATE_BOOK, {
-    refetchQueries: [ { query: BOOKS_BY_GENRE }, { query: ALL_AUTHORS }  ]
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message, 10)
+    },
+    refetchQueries: [ { query: ALL_AUTHORS } ],
+    update: (store, response) => {
+      let firstGenre = response.data.addBook.genres[0]
+      console.log('firstGenre:', firstGenre)
+      if(!firstGenre) {
+        firstGenre = 'EXTRA'
+      }
+
+      const bookDataInStore = store.readQuery({
+        query: BOOKS_BY_GENRE,
+        variables: { genre: firstGenre }
+      })
+      console.log('bookDataInStore:', bookDataInStore)
+      
+      store.writeQuery({
+        query: BOOKS_BY_GENRE,
+        variables: { genre: firstGenre },
+        data: {
+          allBooks: [ ...bookDataInStore.allBooks, response.data.addBook ]
+        }
+      })
+
+      // let's see if the write has added anything
+      const newDataInStore = store.readQuery({
+        query: BOOKS_BY_GENRE,
+        variables: { genre: firstGenre }
+      })
+      console.log('newDataInStore', newDataInStore) 
+
+
+      // read the book list with empty genre
+      const allBookDataInStore = store.readQuery({
+        query: BOOKS_BY_GENRE,
+        variables: { genre: '' }
+      })
+      console.log('allBookDataInStore', allBookDataInStore)
+      
+      // add this book to the list with empty genre
+      store.writeQuery({
+        query: BOOKS_BY_GENRE,
+        variables: { genre: '' },
+        data: {
+          allBooks: [ ...allBookDataInStore.allBooks, response.data.addBook ]
+        }
+      })
+      
+      // let's see if the write has added anything
+      const newAllBookDataInStore = store.readQuery({
+        query: BOOKS_BY_GENRE,
+        variables: { genre: '' }
+      })
+      console.log('newAllBookDataInStore', newAllBookDataInStore)
+    }
   })
 
   if (!show) {
@@ -43,7 +98,7 @@ const NewBook = ({ show, setError, setPage }) => {
       setPage('books')
 
     } catch (e) {
-      setError(`Adding book failed. ${e.graphQLErrors[0].message}`, 10)      
+      setError(`Adding book failed.`, 10)      
     }
   }
 
@@ -95,3 +150,33 @@ const NewBook = ({ show, setError, setPage }) => {
 }
 
 export default NewBook
+
+
+/*
+TODO
+- lisää kirja olemassaolevalle kirjailijalle olemassaolevaan genreen
+OK  - päivittyykö authors sivun books laskuri tälle kirjialijalle
+OK  - päivittyykö books sivun oikea genre
+OK  - päivittyykö books sivun show all books
+- lisää kirja uudelle kirjailijalle olemassaolevaan genreen
+OK  - päivittyykö authors sivun books laskuri tälle kirjialijalle
+OK  - päivittyykö books sivun oikea genre
+OK  - päivittyykö books sivun show all books
+- lisää kirja olemassaolevalle kirjailijalle uuteen genreen
+  - päivittyykö authors sivun books laskuri tälle kirjialijalle
+  - päivittyykö books sivun oikea genre
+  - päivittyykö books sivun show all books
+- lisää kirja uudelle kirjailijalle uuteen genreen
+  - päivittyykö authors sivun books laskuri tälle kirjialijalle
+  - päivittyykö books sivun oikea genre
+  - päivittyykö books sivun show all books
+- lisää kirja yhteen olemassaolevaan ja yhteen uuteen genreen
+  - päivittyykö authors sivun books laskuri tälle kirjialijalle
+  - päivittyykö books sivun oikea genre
+  - päivittyykö books sivun show all books
+- lisää kirja kahteen uuteen genreen
+  - päivittyykö authors sivun books laskuri tälle kirjialijalle
+  - päivittyykö books sivun oikea genre
+  - päivittyykö books sivun show all books
+  
+   */

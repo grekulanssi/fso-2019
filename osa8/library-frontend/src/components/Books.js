@@ -7,6 +7,7 @@ const Books = ({ show }) => {
   const [getGenreBooks, result] = useLazyQuery(BOOKS_BY_GENRE)
 
   const showGenreBooks = (genreToShow) => {
+    console.log('renderöidään genre:', genreToShow)
     getGenreBooks({ variables: { genre: genreToShow } })
   }
 
