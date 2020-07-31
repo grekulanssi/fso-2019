@@ -3,35 +3,26 @@ const mongoose = require('mongoose')
 const Author = require('./models/author')
 const Book = require('./models/book')
 const config = require('./config')
-const { v1: uuid } = require('uuid')
-const init = require('./init')
 
 const MONGODB_URI = config.MONGODB_URI
 console.log('connecting to', MONGODB_URI)
 
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
+
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    console.log('connected to MongoDB')
+    console.log('* * * connected to MongoDB * * *')
   })
   .catch((e) => {
     console.log('error connecting to MongoDB:', e.message)
   })
 
-/**
-puuttuvia kenttiä t. 8.13, jotka pitää lisätä t. 8.14:
-Query
-  allBooks(author, genre)
-Author
-  bookCount
-Book
-  author
-Mutation
-  editAuthor
- */
 const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
+    author: Author!
     genres: [String]!
     id: ID!
   }
@@ -39,13 +30,17 @@ const typeDefs = gql`
   type Author {
     name: String!
     born: Int
+    bookCount: Int!
     id: ID!
   }
 
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks: [Book]!
+    allBooks(
+      author: String
+      genre: String
+    ): [Book]!
     allAuthors: [Author]!
   }
 
@@ -54,7 +49,13 @@ const typeDefs = gql`
       title: String!
       published: Int!
       genres: [String]!
-    ): Book
+      name: String!
+      born: Int
+    ): Book,
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `
 
@@ -62,55 +63,48 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allBooks: () => Book.find({}),
-    /* DOESN'T NEED TO WORK YET
-    allBooks: (root, args) => {
-      let allBooks = books
+    allBooks: async (root, args) => {
+      let books = await Book.find({}).populate('author')
       if(args.author) {
-        allBooks = allBooks.filter(b => b.author === args.author)
+        books = books.filter(b => b.author.name === args.author)
       }
       if(args.genre) {
-        allBooks = allBooks.filter(b => b.genres.includes(args.genre))
+        books = books.filter(b => b.genres.includes(args.genre))
       }
-      return allBooks
+      return books
     },
-    */
-    allAuthors: () => Author.find({})
+    allAuthors: async () => await Author.find({})
   },
-  /* DOESN'T NEED TO WORK YET
   Author: {
-    bookCount: (root) => books.filter(b => b.author === root.name).length
+    bookCount: async (root) => (await Book.find( { author: root.id } )).length
   },
-  */
-  /* DOESN'T NEED TO WORK YET
-  Book: {
-    author: (?) => ?
-  },
-  */
   Mutation: {
-    addBook: (root, args) => {
-      const book = new Book({ ...args })
-      /*if(!Author.find(a => a.name === args.author.name)) {
-        console.log('NEW AUTHOR:', args.author.name)
-        const author = new Author({ ...args.author })
-        author.save()
-      }*/
-      return book.save()
+    addBook: async (root, args) => {
+      let [author] = await Author.find({ name: args.name })
+      if(!author) {
+        author = await new Author({
+          name: args.name,
+          born: (args.born ? args.born : null)
+        }).save()
+      }
+      const book = new Book({
+        title: args.title,
+        published: args.published,
+        author: author,
+        genres: args.genres
+      })
+      const savedBook = await book.save()
+      console.log('SAVED NEW BOOK:', savedBook)
+      return savedBook
     },
-    /* DOESN'T NEED TO WORK YET
-    editAuthor: (root, args) => {
-      let author = authors.find(a => a.name === args.name)
+    editAuthor: async (root, args) => {
+      let [author] = await Author.find({ name: args.name })
       if(!author) return null
       author.born = args.setBornTo
-      return author
+      const editedAuthor = await Author.findByIdAndUpdate(author.id, author, { new: true })
+      console.log('EDITED AUTHOR:', editedAuthor)
+      return editedAuthor
     }
-    ADD THIS TO typeDefs:
-    editAuthor(
-      name: String!
-      setBornTo: Int!
-    ): Author
-
-    */
   }
 }
 

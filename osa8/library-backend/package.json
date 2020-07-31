@@ -5,7 +5,8 @@
   "main": "library-backend.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "dev": "nodemon library-backend.js"
   },
   "author": "Anssi Grekula",
   "license": "ISC",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^7.5.0",
-    "eslint-plugin-graphql": "^4.0.0"
+    "eslint-plugin-graphql": "^4.0.0",
+    "nodemon": "^2.0.4"
   }
 }

@@ -4,7 +4,7 @@ import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK } from '../queries'
 
 const NewBook = ({ show, setError }) => {
   const [title, setTitle] = useState('')
-  const [author, setAuhtor] = useState('')
+  const [name, setName] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
@@ -20,14 +20,14 @@ const NewBook = ({ show, setError }) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    if(!title || !author || !published || genres.length === 0) {
+    if(!title || !name || !published || genres.length === 0) {
       setError('All fields are required!')
       return
     }
 
     const createdBook = await createBook({
       variables: {
-        title, author, published, genres
+        title, published, genres, name
       }
     })
 
@@ -35,7 +35,7 @@ const NewBook = ({ show, setError }) => {
 
     setTitle('')
     setPublished('')
-    setAuhtor('')
+    setName('')
     setGenres([])
     setGenre('')
 
@@ -57,10 +57,10 @@ const NewBook = ({ show, setError }) => {
           />
         </div>
         <div>
-          author*
+          author name*
           <input
-            value={author}
-            onChange={({ target }) => setAuhtor(target.value)}
+            value={name}
+            onChange={({ target }) => setName(target.value)}
           />
         </div>
         <div>
