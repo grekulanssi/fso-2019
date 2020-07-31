@@ -13,7 +13,7 @@ const LoginForm = ({ setError, setToken, show, setPage }) => {
   })
 
   useEffect(() => {
-    if ( result.data ) {      
+    if ( result.data ) {
       const token = result.data.login.value
       setToken(token)
       window.localStorage.setItem('libraryapp-user-token', token)
@@ -29,6 +29,7 @@ const LoginForm = ({ setError, setToken, show, setPage }) => {
     await login({ variables: { username, password } })
       ? setPage('authors')
       : setPage('login')
+    setPassword('')
   }
 
   return (

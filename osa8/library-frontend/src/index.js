@@ -28,7 +28,7 @@ const wsLink = new WebSocketLink({
 })
 
 const splitLink = split(
-  ({ query}) => {
+  ({ query }) => {
     const definition = getMainDefinition(query)
     return(
       definition.kind === 'OperationDefinition' &&
@@ -40,9 +40,9 @@ const splitLink = split(
 )
 
 const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: splitLink
-  })
+  cache: new InMemoryCache(),
+  link: splitLink
+})
 
 ReactDOM.render(
   <ApolloProvider client={client}>

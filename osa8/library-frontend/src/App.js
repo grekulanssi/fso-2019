@@ -19,7 +19,7 @@ const App = () => {
     if(!token) return
     setToken(token)
   }, [])
-  
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       console.log(subscriptionData)
@@ -37,7 +37,7 @@ const App = () => {
     setErrorMessage(message)
     setTimeout(() => {
       setErrorMessage(null)
-    }, 1000 * durationSeconds);
+    }, 1000 * durationSeconds)
   }
 
   const handleLogout = () => {
@@ -49,7 +49,7 @@ const App = () => {
   return (
     <div>
       <div>
-      <h1>Library</h1>
+        <h1>Library</h1>
       </div>
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
@@ -63,6 +63,7 @@ const App = () => {
       <Authors
         show={page === 'authors'}
         setError={notify}
+        isLoggedIn={token ? true : false}
       />
 
       <Books
@@ -74,11 +75,11 @@ const App = () => {
       />
 
       <LoginForm
-          setToken={setToken}
-          setError={notify}
-          show={page === 'login'}
-          setPage={setPage}
-        />
+        setToken={setToken}
+        setError={notify}
+        show={page === 'login'}
+        setPage={setPage}
+      />
 
       <NewBook
         show={page === 'add'}
@@ -86,14 +87,14 @@ const App = () => {
         setPage={setPage}
       />
       <div>
-      <Notification errorMessage={errorMessage} />
+        <Notification errorMessage={errorMessage} />
       </div>
     </div>
   )
 }
 
 const Notification = ({ errorMessage }) => (
-  {errorMessage} ? <div className='notification'>{errorMessage}</div> : null
+  (errorMessage) ? <div className='notification'>{errorMessage}</div> : null
 )
 
 export default App

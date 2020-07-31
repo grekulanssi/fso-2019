@@ -13,11 +13,11 @@ const Recommendations = ({ show }) => {
 
   const user = useQuery(CURRENT_USER)
 
-  useEffect(() => { 
-    if(user.data) {
+  useEffect(() => {
+    if(show && user.data.me) {
       setFavGenre(user.data.me.favoriteGenre)
     }
-  }, [user])// eslint-disable-line
+  }, [user, show])// eslint-disable-line
 
   if (!show) {
     return null
@@ -47,7 +47,7 @@ const Recommendations = ({ show }) => {
 
   return (
     <div>
-      <h2>the librarian's recommendations</h2>
+      <h2>the librarian´s recommendations</h2>
       <div>books in your favorite genre <strong>{user.loading ? 'loading...' : favGenre}</strong>:</div>
       <br />
       <table>
