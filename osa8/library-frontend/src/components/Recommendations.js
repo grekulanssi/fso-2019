@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { ALL_BOOKS } from '../queries'
+import { ALL_BOOKS, CURRENT_USER } from '../queries'
 
-const Books = ({ show }) => {
-  const [genre, setGenre] = useState('all books')
+const Recommendations = ({ show }) => {
+  let favGenre = '(no favorite genre)'
 
   const books = useQuery(ALL_BOOKS)
-  let allGenres = []
-  if(!books.loading) {
-    allGenres = books.data.allBooks.map(
-      b => b.genres).flat().filter((g, i, array) => array.indexOf(g) === i)
+  const user = useQuery(CURRENT_USER)
+
+  if(!user.loading) {
+    favGenre = user.data.me.favoriteGenre
   }
 
   if (!show) {
@@ -27,7 +27,7 @@ const Books = ({ show }) => {
   const listing = () => {
     return (    
     books.data.allBooks
-      .filter(b => genre === 'all books' ? true : b.genres.includes(genre))
+      .filter(b => b.genres.includes(favGenre))
       .map(b =>
       <tr key={b.title}>
         <td>{b.title}</td>
@@ -39,14 +39,9 @@ const Books = ({ show }) => {
 
   return (
     <div>
-      <h2>books</h2>
-      <div>in genre <strong>{genre}</strong>:</div>
-      <div className='genreSelector'>
-        <div>select genre:</div>
-        {allGenres.map(g => <button key={g} onClick={() => setGenre(g)}>{g}</button>)}
-        <br /><br />
-        <button key='all' onClick={() => setGenre('all books')}>show all books</button>
-      </div>
+      <h2>the librarian's recommendations</h2>
+      <div>books in your favorite genre <strong>{user.loading ? 'loading...' : favGenre}</strong>:</div>
+      <br />
       <table>
         <tbody>
           <tr>
@@ -65,4 +60,4 @@ const Books = ({ show }) => {
   )
 }
 
-export default Books
+export default Recommendations

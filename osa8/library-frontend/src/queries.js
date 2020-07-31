@@ -20,6 +20,16 @@ export const ALL_BOOKS = gql`
         bookCount
       }
       published
+      genres
+    }
+  }
+`
+
+export const CURRENT_USER = gql`
+  query {
+    me {
+      username
+      favoriteGenre
     }
   }
 `
