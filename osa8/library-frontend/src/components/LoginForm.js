@@ -13,10 +13,7 @@ const LoginForm = ({ setError, setToken, show, setPage }) => {
   })
 
   useEffect(() => {
-    console.log('LOGIN FORM EFEKTI')
-    if ( result.data ) {
-      console.log('LOGIN FORM EFEKTI MUUTTAA TOKENIA')
-      
+    if ( result.data ) {      
       const token = result.data.login.value
       setToken(token)
       window.localStorage.setItem('libraryapp-user-token', token)

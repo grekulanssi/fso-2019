@@ -9,7 +9,7 @@ export const ALL_AUTHORS = gql`
     }
   }
 `
-
+//not used in app, BOOKS_BY_GENRE used instead
 export const ALL_BOOKS = gql`
   query {
     allBooks {
@@ -21,6 +21,28 @@ export const ALL_BOOKS = gql`
       }
       published
       genres
+    }
+  }
+`
+
+export const ALL_GENRES = gql`
+  query {
+    allBooks {
+      genres
+    }
+  }
+`
+
+export const BOOKS_BY_GENRE = gql`
+  query booksByGenre(
+    $genre: String!
+    ) {
+    allBooks(genre: $genre) {
+      title
+      author {
+        name
+      }
+      published
     }
   }
 `
