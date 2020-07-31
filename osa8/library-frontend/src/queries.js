@@ -50,17 +50,32 @@ export const CREATE_BOOK = gql`
   }
 `
 
-export const EDIT_AUTHOR = gql`mutation addAuthorBorn(
-  $name: String!,
-  $born: Int!
-  ) {
-    editAuthor(
-      name: $name,
-      setBornTo: $born
+export const EDIT_AUTHOR = gql`
+  mutation addAuthorBorn(
+    $name: String!,
+    $born: Int!
     ) {
-      name,
-      born,
-      bookCount
+      editAuthor(
+        name: $name,
+        setBornTo: $born
+      ) {
+        name,
+        born,
+        bookCount
+      }
+    }
+`
+
+export const LOGIN = gql`
+  mutation login(
+    $username: String!,
+    $password: String!
+    ) {
+      login(
+        username: $username,
+        password: $password
+      ) {
+        value
     }
   }
 `

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK } from '../queries'
 
-const NewBook = ({ show, setError }) => {
+const NewBook = ({ show, setError, setPage }) => {
   const [title, setTitle] = useState('')
   const [name, setName] = useState('')
   const [published, setPublished] = useState('')
@@ -40,8 +40,10 @@ const NewBook = ({ show, setError }) => {
       setGenres([])
       setGenre('')
 
+      setPage('books')
+
     } catch (e) {
-      setError('Adding book failed. Book title must be at least 2 letters long and unique. Author name must be at least 4 letters. Please try again.', 10)      
+      setError(`Adding book failed. ${e.graphQLErrors[0].message}`, 10)      
     }
   }
 
