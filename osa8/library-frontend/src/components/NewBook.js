@@ -25,20 +25,24 @@ const NewBook = ({ show, setError }) => {
       return
     }
 
-    const createdBook = await createBook({
-      variables: {
-        title, published, genres, name
-      }
-    })
+    try {
+      const createdBook = await createBook({
+        variables: {
+          title, published, genres, name
+        }
+      })
+    
+      console.log('createdbook:', createdBook)
 
-    console.log('createdbook:', createdBook)
+      setTitle('')
+      setPublished('')
+      setName('')
+      setGenres([])
+      setGenre('')
 
-    setTitle('')
-    setPublished('')
-    setName('')
-    setGenres([])
-    setGenre('')
-
+    } catch (e) {
+      setError('Adding book failed. Book title must be at least 2 letters long and unique. Author name must be at least 4 letters. Please try again.', 10)      
+    }
   }
 
   const addGenre = () => {

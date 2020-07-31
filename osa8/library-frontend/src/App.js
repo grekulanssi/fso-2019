@@ -13,11 +13,11 @@ const App = () => {
   })*/
   // If you want to use version 2, please see Authors.js
 
-  const notify = (message) => {
+  const notify = (message, durationSeconds = 5) => {
     setErrorMessage(message)
     setTimeout(() => {
       setErrorMessage(null)
-    }, 5000);
+    }, 1000 * durationSeconds);
   }
 
   return (

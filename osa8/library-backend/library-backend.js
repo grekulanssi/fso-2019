@@ -82,10 +82,16 @@ const resolvers = {
     addBook: async (root, args) => {
       let [author] = await Author.find({ name: args.name })
       if(!author) {
-        author = await new Author({
-          name: args.name,
-          born: (args.born ? args.born : null)
-        }).save()
+        try {
+          author = await new Author({
+            name: args.name,
+            born: (args.born ? args.born : null)
+          }).save()
+        } catch(e) {
+          throw new UserInputError(e.message, {
+            invalidArgs: args
+          })
+        }
       }
       const book = new Book({
         title: args.title,
@@ -93,17 +99,29 @@ const resolvers = {
         author: author,
         genres: args.genres
       })
-      const savedBook = await book.save()
-      console.log('SAVED NEW BOOK:', savedBook)
-      return savedBook
+      try {
+        const savedBook = await book.save()
+        console.log('SAVED NEW BOOK:', savedBook)
+        return savedBook
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args
+        })
+      }
     },
     editAuthor: async (root, args) => {
       let [author] = await Author.find({ name: args.name })
       if(!author) return null
       author.born = args.setBornTo
-      const editedAuthor = await Author.findByIdAndUpdate(author.id, author, { new: true })
-      console.log('EDITED AUTHOR:', editedAuthor)
-      return editedAuthor
+      try {
+        const editedAuthor = await Author.findByIdAndUpdate(author.id, author, { new: true })
+        console.log('EDITED AUTHOR:', editedAuthor)
+        return editedAuthor
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args
+        })
+      }
     }
   }
 }
